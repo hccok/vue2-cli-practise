@@ -32,6 +32,7 @@ export default {
   methods: {
     goBack() {
       this.$router.go(-1);
+
     },
     getArticleDetail(id) {
       axios
@@ -53,14 +54,15 @@ export default {
 </script>
 <style scoped>
 .bgImg{
-  background-color: #b6d4e6;
   width: 100%;
   height: 100%;
 
 }
 .article{
-  width: 80%;
-  margin: 0 auto;
+  width: 60%;
+  margin: 20px auto;
+  border-radius:5px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 .art-title{
   height: 60px;
@@ -74,6 +76,18 @@ export default {
   text-indent: 2em;
 }
 .el-page-header{
-  margin-top: 40px;
+  margin-top: 20px;
+}
+
+.button_boxlt {
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  width: 40px;
+  height: 40px;
+}
+.button_boxlt img {
+  width: 100%;
+  height: 100%;
 }
 </style>

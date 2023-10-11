@@ -1,5 +1,5 @@
 <template>
-  <div  class="artlist">
+  <div class="artlist" ref="artlist">
     <div class="bgcImg">
       <div class="mask"></div>
       <p class="onetext">{{ onetext.hitokoto }}</p>
@@ -17,6 +17,7 @@
               <h4 class="article-title" @click="handleDetail(item.info_id)">
                 {{ item.info_name }}
               </h4>
+              <el-divider></el-divider>
               <p class="article-exp" v-html="item.info_excerpt"></p>
             </div>
           </template>
@@ -31,11 +32,10 @@
         >
         </el-pagination>
       </div>
-
     </div>
-    <el-backtop target=".artlist " :bottom=80 :right=80>
-        <i class="el-icon-caret-top"></i>
-      </el-backtop>
+    <div class="button_boxlt" v-show="toTopShow">
+      <img src="../assets//img/backTop.png" @click="TopBotton" />
+    </div>
   </div>
 </template>
 
@@ -54,18 +54,52 @@ export default {
       pageStart: 0,
       a: 22668,
       page: 1,
+      toTopShow: false,
+      scrollToptval: 0,
     };
+  },
+  beforeRouteLeave(to, from, next) {
+    this.scrollToptval = this.$refs.artlist.scrollTop;
+
+    next();
+  },
+  activated() {
+    console.log("actived++++++");
+    this.$refs.artlist.scrollTop = this.scrollToptval;
   },
   created() {},
   mounted() {
     localStorage.setItem("token", this.token);
-
     this.getYiyan();
     this.getStoryList();
+    window.addEventListener("scroll", this.handleScroll, true);
   },
   watch: {},
   computed: {},
   methods: {
+    handleScroll() {
+      this.scrollToptval = Math.floor(
+        document.body.scrollTop || document.documentElement.scrollTop
+      );
+      if (this.scrollToptval > 350) {
+        this.toTopShow = true;
+      } else {
+        this.toTopShow = false;
+      }
+    },
+
+    TopBotton() {
+      let scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      let timer = setInterval(() => {
+        scrollTop -= 100;
+        window.scrollTo(0, scrollTop);
+        if (scrollTop <= 0) {
+          clearInterval(timer);
+        }
+      }, 16.7);
+    },
+
     getYiyan() {
       axios
         .get("https://v1.hitokoto.cn/?c=b")
@@ -75,6 +109,7 @@ export default {
         })
         .catch(console.error);
     },
+
     getStoryList() {
       axios
         .get("/apis/gushi/item/", {
@@ -89,16 +124,17 @@ export default {
         })
         .catch(console.error);
     },
+
     handleDetail(id) {
       localStorage.setItem("id", id);
       if (this.$router.currentRoute.path !== `/article/${id}`) {
         this.$router.push(`/article/${id}`);
       }
     },
+
     currentChange(val) {
       console.log("翻页，当前为第几页", val);
       this.page = val;
-
       this.pageStart = this.a + (this.page - 1) * 10;
 
       this.getStoryList();
@@ -107,10 +143,6 @@ export default {
 };
 </script>
 <style scoped>
-.artlist{
-  height: 100vh;
-  overflow-x: hidden;
-}
 .mask {
   background-color: #bcc6ca;
   width: 100%;
@@ -120,7 +152,8 @@ export default {
 
 .fenye {
   float: right;
-  margin-right: 300px;
+  margin: 40px 300px 40px 0;
+
 }
 .bgcImg {
   position: relative;
@@ -156,5 +189,22 @@ export default {
   color: #aaa7a7;
   text-indent: 2em;
   line-height: 40px;
+}
+.el-divider--horizontal {
+  margin: 0;
+}
+.button_boxlt {
+  position: fixed;
+  cursor: pointer;
+  right: 40px;
+  bottom: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius:5px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+.button_boxlt img {
+  width: 100%;
+  height: 100%;
 }
 </style>

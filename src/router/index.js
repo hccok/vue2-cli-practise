@@ -36,6 +36,9 @@ const routes = [
     path: '/yiyan',
     name: 'yiyan',
     component: () => import('../views/YiyanView.vue'),
+    meta:{
+      keepAlive: true
+    }
   },
   {
     path: '/article/:id',

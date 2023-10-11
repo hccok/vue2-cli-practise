@@ -3,7 +3,11 @@ import NavBar from './components/NavBar.vue';
 <template>
   <div id="app">
     <NavBar/>
-    <router-view/>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
+
   </div>
 </template>
 
@@ -20,5 +24,8 @@ export default{
 
 <style>
 
-
+*{
+  margin: 0;
+  padding: 0;
+}
 </style>
