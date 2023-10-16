@@ -102,7 +102,7 @@ export default {
 
     getYiyan() {
       axios
-        .get("https://v1.hitokoto.cn/?c=b")
+        .get("https://v1.hitokoto.cn/?c=i&c=c&c=d")
         .then((res) => {
           console.log(res.data);
           this.onetext = res.data;

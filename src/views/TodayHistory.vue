@@ -12,6 +12,7 @@
           split-button
           type="info"
           @command="handleCommand"
+          disabled
         >
           其他热搜榜
           <el-dropdown-menu slot="dropdown">
@@ -25,16 +26,19 @@
       </div>
       <div class="table">
         <el-table :data="tableData" style="width: 100%" border>
-          <el-table-column prop="index" label="序号" width="50" align="center">
+          <el-table-column prop="ID" label="序号" width="50" align="center">
+            <template slot-scope="scope">
+            {{ (scope.$index+1)+(page-1)*size }}
+          </template>
           </el-table-column>
-          <el-table-column prop="hot" label="热度" width="180" align="center">
+          <el-table-column prop="views" label="热度" width="180" align="center">
             <template slot-scope="scope">
               <img
                 src="../assets/icon/hot.png"
                 style="width: 19px; height: 19px; line-height: 100%"
               />
               <span style="margin-left: 10px; font-size: 12px">
-                {{ scope.row.hot !== "万" ? scope.row.hot : "--万" }}</span
+                {{ scope.row.views.slice(0, -2) }}</span
               >
             </template>
           </el-table-column>
@@ -77,7 +81,7 @@ export default {
     };
   },
   created() {
-    this.getTodayInfro("douyin");
+    this.getTodayInfro();
   },
   mounted() {
     
@@ -89,16 +93,13 @@ export default {
   },
   computed: {},
   methods: {
-    async getTodayInfro(e) {
-      await axios
-        .get("https://api.loneag.com/api/hotlist", {
-          params: {
-            type: e,
-          },
+     getTodayInfro() {
+       axios
+        .get("/hot", {
         })
         .then((res) => {
           console.log(res);
-          this.todayInfro = res.data.data;
+          this.todayInfro = res.data.data.items;
           this.title = res.data.title;
         })
         .catch((err) => {
